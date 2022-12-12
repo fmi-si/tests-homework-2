@@ -68,8 +68,10 @@ for task in $tasks; do
 			echo >> $results
 		done
 
-		echo "Grade: ${correct_tests}/${tests_count}." >> $results
-		echo "Task ${task}: ${correct_tests}/${tests_count}." >> $report
+        percentage="$(awk -v correct=$correct_tests -v total=$tests_count 'BEGIN{printf("%.2f", correct * 100 / total)}')"
+
+		echo "Grade: ${correct_tests}/${tests_count}, ${percentage}%" >> $results
+		echo "Task ${task}: ${correct_tests}/${tests_count}, ${percentage}%" >> $report
 	else
 		errors=$((errors+1))
 
@@ -85,5 +87,7 @@ echo "Check the Summary tab on the left to download the test results."
 echo
 echo
 echo
+
+python3 "${test_dir}/python-test.py" "$test_dir/tests" .
 
 exit $errors
